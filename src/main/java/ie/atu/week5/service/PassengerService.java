@@ -32,4 +32,18 @@ public class PassengerService {
         store.add(p);
         return p;
     }
+
+    // PUT
+    public Optional<Passenger> update(String id, Passenger updated) {
+        return (findById(id).map(existing -> {
+            existing.setName(updated.getName());
+            existing.setEmail(updated.getEmail());
+            return existing;
+        }));
+    }
+
+    // DELETE
+    public boolean deleteById(String id) {
+        return store.removeIf(p -> p.getPassengerId().equals(id));
+    }
 }
