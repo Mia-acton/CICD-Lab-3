@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,5 +33,25 @@ public class PassengerController {
         return ResponseEntity
                 .created(URI.create("/api/passengers/" + created.getPassengerId()))
                 .body(created);
+    }
+
+    // PUT /api/passengers/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<Passenger> update(@PathVariable String id, @Valid @RequestBody Passenger p) {
+        Optional<Passenger> updated = service.update(id, p);
+        if (updated.isPresent()) {
+            return ResponseEntity.ok(updated.get()); // 204
+        }
+        return ResponseEntity.notFound().build();  // 404
+    }
+
+    // DELETE /api/passengers/{id}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        boolean deleted = service.deleteById(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build(); // 204
+        }
+        return ResponseEntity.notFound().build(); // 404
     }
 }

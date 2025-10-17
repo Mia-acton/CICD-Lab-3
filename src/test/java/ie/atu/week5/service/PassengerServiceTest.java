@@ -28,4 +28,42 @@ class PassengerServiceTest {
         assertTrue(found.isPresent());
         assertEquals("Mia", found.get().getName());
     }
+
+    @Test
+    void duplicateIdThrows() {
+        service.create(Passenger.builder()
+                .passengerId("P2")
+                .name("Bob")
+                .email("b@atu.ie")
+                .build());
+
+        assertThrows(IllegalStateException.class, () ->
+                service.create(Passenger.builder()
+                        .passengerId("P2")
+                        .name("Bobby")
+                        .email("bob@ex.com")
+                        .build()));
+    }
+
+    // Update Test
+    @Test
+    void updateExistingPassenger() {
+        Passenger p = Passenger.builder()
+                .passengerId("P3")
+                .name("Abigail")
+                .email("abigail@atu.ie")
+                .build();
+
+        service.create(p);
+
+        Passenger updated = Passenger.builder()
+                .passengerId("P3")
+                .name("Abi")
+                .email("abi@atu.ie")
+                .build();
+
+        Optional<Passenger> existing = service.findById("P3");
+        assertTrue(existing.isPresent());
+        assertEquals("Abigail", existing.get().getName());
+    }
 }
