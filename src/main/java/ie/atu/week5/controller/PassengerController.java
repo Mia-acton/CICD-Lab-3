@@ -35,7 +35,7 @@ public class PassengerController {
                 .body(created);
     }
 
-    // PUT /api/passengers/{id}
+    // PUT /api/passengers/{id} - update name/email if id exists; return 404 otherwise.
     @PutMapping("/{id}")
     public ResponseEntity<Passenger> update(@PathVariable String id, @Valid @RequestBody Passenger p) {
         Optional<Passenger> updated = service.update(id, p);
@@ -45,7 +45,7 @@ public class PassengerController {
         return ResponseEntity.notFound().build();  // 404
     }
 
-    // DELETE /api/passengers/{id}
+    // DELETE /api/passengers/{id} - 204 if removed; 404 otherwise.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         boolean deleted = service.deleteById(id);
