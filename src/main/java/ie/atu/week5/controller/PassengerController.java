@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import java.net.URI; // For building location URIs
 import java.util.Optional;
 
 @RestController
@@ -40,7 +40,7 @@ public class PassengerController {
     public ResponseEntity<Passenger> update(@PathVariable String id, @Valid @RequestBody Passenger p) {
         Optional<Passenger> updated = service.update(id, p);
         if (updated.isPresent()) {
-            return ResponseEntity.ok(updated.get()); // 204
+            return ResponseEntity.ok(updated.get()); // HTTP 200
         }
         return ResponseEntity.notFound().build();  // 404
     }
