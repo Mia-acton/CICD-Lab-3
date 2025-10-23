@@ -45,7 +45,7 @@ class PassengerServiceTest {
                         .build()));
     }
 
-    // Update Test
+    // Update Success
     @Test
     void updateExistingPassenger() {
         Passenger p = Passenger.builder()
@@ -65,5 +65,28 @@ class PassengerServiceTest {
         Optional<Passenger> existing = service.findById("P3");
         assertTrue(existing.isPresent());
         assertEquals("Abigail", existing.get().getName());
+    }
+
+    // Update Not Found
+    @Test
+    void deleteExistingPassenger() {
+        Passenger p = Passenger.builder()
+                .passengerId("P4")
+                .name("Isabel")
+                .email("isabel@atu.ie")
+                .build();
+
+        service.create(p);
+
+        boolean removed = service.deleteById("P4");
+        assertTrue(removed);
+        assertTrue(service.findById("P4").isEmpty());
+    }
+
+    // Delete Not Found
+    @Test
+    void deleteNonExistingPassengerReturnFalse() {
+        boolean removed = service.deleteById("P10");
+        assertFalse(removed);
     }
 }
