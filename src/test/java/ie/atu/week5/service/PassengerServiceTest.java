@@ -11,9 +11,11 @@ class PassengerServiceTest {
 
     private PassengerService service;
 
+    // Runs before each test to ensure a fresh, empty service
     @BeforeEach
     void setUp() { service = new PassengerService(); }
 
+    // Test creating a passenger and then receiving it by ID
     @Test
     void createThenFindById() {
         Passenger p = Passenger.builder()
@@ -22,13 +24,14 @@ class PassengerServiceTest {
                 .email("mia@atu.ie")
                 .build();
 
-        service.create(p);
+        service.create(p); // Add passenger
 
-        Optional<Passenger> found = service.findById("P1");
-        assertTrue(found.isPresent());
-        assertEquals("Mia", found.get().getName());
+        Optional<Passenger> found = service.findById("P1"); // Retrieve passenger
+        assertTrue(found.isPresent()); // Ensure it exists
+        assertEquals("Mia", found.get().getName()); // Ensure name matches
     }
 
+    // Test that creating a passenger with a duplicate ID throws an exception
     @Test
     void duplicateIdThrows() {
         service.create(Passenger.builder()
@@ -39,13 +42,13 @@ class PassengerServiceTest {
 
         assertThrows(IllegalStateException.class, () ->
                 service.create(Passenger.builder()
-                        .passengerId("P2")
+                        .passengerId("P2") // Duplicate ID
                         .name("Bobby")
                         .email("bob@ex.com")
                         .build()));
     }
 
-    // Update Success
+    // Update Success Test
     @Test
     void updateExistingPassenger() {
         Passenger p = Passenger.builder()
@@ -54,7 +57,7 @@ class PassengerServiceTest {
                 .email("abigail@atu.ie")
                 .build();
 
-        service.create(p);
+        service.create(p); // Add passenger
 
         Passenger updated = Passenger.builder()
                 .passengerId("P3")
@@ -62,16 +65,16 @@ class PassengerServiceTest {
                 .email("abi@atu.ie")
                 .build();
 
-        Optional<Passenger> result = service.update("P3", updated);
-        assertTrue(result.isPresent());
+        Optional<Passenger> result = service.update("P3", updated); // Perform update
+        assertTrue(result.isPresent()); // Ensure update succeeded
 
-        Optional<Passenger> found = service.findById("P3");
+        Optional<Passenger> found = service.findById("P3"); // Retrieve updated passenger
         assertTrue(found.isPresent());
-        assertEquals("Abi", found.get().getName());
-        assertEquals("abi@atu.ie", found.get().getEmail());
+        assertEquals("Abi", found.get().getName()); // Name updated
+        assertEquals("abi@atu.ie", found.get().getEmail()); // Email updated
     }
 
-    // Update Not Found
+    // Update Not Found Test
     @Test
     void updateNonExistingPassengerReturnFalse() {
         Passenger updated = Passenger.builder()
@@ -81,10 +84,10 @@ class PassengerServiceTest {
                 .build();
 
         Optional<Passenger> result = service.update("P10", updated);
-        assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty()); // Update should fail since passenger does not exist
     }
 
-    // Delete Success
+    // Delete Success Test
     @Test
     void deleteExistingPassenger() {
         Passenger p = Passenger.builder()
@@ -93,17 +96,17 @@ class PassengerServiceTest {
                 .email("isabel@atu.ie")
                 .build();
 
-        service.create(p);
+        service.create(p); // Add passenger
 
-        boolean removed = service.deleteById("P4");
-        assertTrue(removed);
-        assertTrue(service.findById("P4").isEmpty());
+        boolean removed = service.deleteById("P4"); // Delete by ID
+        assertTrue(removed); // Ensure deletion succeeded
+        assertTrue(service.findById("P4").isEmpty()); // Ensure passenger no longer exists
     }
 
-    // Delete Not Found
+    // Delete Not Found Test
     @Test
     void deleteNonExistingPassengerReturnFalse() {
-        boolean removed = service.deleteById("P10");
-        assertFalse(removed);
+        boolean removed = service.deleteById("P10"); // Attempt to delete non-existing passenger
+        assertFalse(removed); // Ensure deletion fails
     }
 }
