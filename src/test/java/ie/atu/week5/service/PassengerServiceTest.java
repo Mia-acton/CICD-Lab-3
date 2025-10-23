@@ -62,12 +62,29 @@ class PassengerServiceTest {
                 .email("abi@atu.ie")
                 .build();
 
-        Optional<Passenger> existing = service.findById("P3");
-        assertTrue(existing.isPresent());
-        assertEquals("Abigail", existing.get().getName());
+        Optional<Passenger> result = service.update("P3", updated);
+        assertTrue(result.isPresent());
+
+        Optional<Passenger> found = service.findById("P3");
+        assertTrue(found.isPresent());
+        assertEquals("Abi", found.get().getName());
+        assertEquals("abi@atu.ie", found.get().getEmail());
     }
 
     // Update Not Found
+    @Test
+    void updateNonExistingPassengerReturnFalse() {
+        Passenger updated = Passenger.builder()
+                .passengerId("P10")
+                .name("Random")
+                .email("random@atu.ie")
+                .build();
+
+        Optional<Passenger> result = service.update("P10", updated);
+        assertTrue(result.isEmpty());
+    }
+
+    // Delete Success
     @Test
     void deleteExistingPassenger() {
         Passenger p = Passenger.builder()
